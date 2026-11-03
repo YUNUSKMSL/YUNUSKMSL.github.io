@@ -1,1035 +1,424 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Annemin Kesintisiz Mutfak Ansiklopedisi</title>
-    <style>
-        :root {
-            --primary: #b71c1c;
-            --primary-dark: #7f0000;
-            --primary-light: #ffebee;
-            --yoresel: #e65100;
-            --yoresel-light: #fff3e0;
-            --success: #1b5e20;
-            --success-bg: #e8f5e9;
-            --warning: #e65100;
-            --warning-bg: #fff8e1;
-            --bg: #f4f1ea;
-            --card: #ffffff;
-            --text: #222222;
-            --muted: #666666;
-            --border: #e0dbd1;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parlayan Çiçekler</title>
+<style>
+  *, *::after, *::before {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
+  :root {
+    --dark-color: #05050a;
+  }
 
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            padding-bottom: 80px;
-        }
+  body {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: var(--dark-color);
+    overflow: hidden;
+    perspective: 1000px;
+  }
 
-        header {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            padding: 18px 15px;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.15);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            text-align: center;
-        }
+  /* Arka Plan ve Yıldız Parıltıları */
+  .night {
+    position: fixed;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 100%;
+    background-image: 
+      radial-gradient(ellipse at top, transparent 0%, var(--dark-color)), 
+      radial-gradient(ellipse at bottom, var(--dark-color), rgba(145, 233, 255, 0.15));
+  }
 
-        header h1 {
-            font-size: 1.5rem;
-            font-weight: 800;
-            margin-bottom: 3px;
-        }
+  .stars {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
 
-        header p {
-            font-size: 0.9rem;
-            opacity: 0.92;
-        }
+  .star {
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #a7ffee;
+    animation: twinkle 3s infinite ease-in-out;
+  }
 
-        .container {
-            max-width: 980px;
-            margin: 0 auto;
-            padding: 14px;
-        }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.2; transform: scale(0.8); }
+    50% { opacity: 0.9; transform: scale(1.2); }
+  }
 
-        /* 1. ARAMA ÇUBUĞU */
-        .search-panel {
-            background: var(--card);
-            border-radius: 18px;
-            padding: 16px;
-            margin-bottom: 14px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
-            border: 2px solid var(--border);
-        }
+  /* Çiçek Ana Kapsayıcı */
+  .flowers {
+    position: relative;
+    transform: scale(0.9);
+    z-index: 2;
+  }
 
-        .search-row {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
+  .flower {
+    position: absolute;
+    bottom: 10vmin;
+    transform-origin: bottom center;
+    z-index: 10;
+    --fl-speed: 0.8s;
+  }
 
-        .search-input-wrap {
-            flex: 1;
-            min-width: 240px;
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
+  .flower--1 {
+    animation: moving-flower-1 4s linear infinite;
+  }
+  .flower--1 .flower__line {
+    height: 70vmin;
+    animation-delay: 0.3s;
+  }
 
-        .search-icon {
-            position: absolute;
-            left: 14px;
-            font-size: 1.2rem;
-        }
+  .flower--2 {
+    left: 50%;
+    transform: rotate(20deg);
+    animation: moving-flower-2 4s linear infinite;
+  }
+  .flower--2 .flower__line {
+    height: 60vmin;
+    animation-delay: 0.6s;
+  }
 
-        .search-input {
-            width: 100%;
-            padding: 14px 40px 14px 42px;
-            border: 2px solid #ccc;
-            border-radius: 14px;
-            font-size: 1.08rem;
-            font-weight: 600;
-            outline: none;
-            transition: 0.2s;
-            background: #fdfcfb;
-        }
+  .flower--3 {
+    left: 50%;
+    transform: rotate(-15deg);
+    animation: moving-flower-3 4s linear infinite;
+  }
+  .flower--3 .flower__line {
+    height: 55vmin;
+    animation-delay: 0.9s;
+  }
 
-        .search-input:focus {
-            border-color: var(--primary);
-            background: #fff;
-            box-shadow: 0 0 0 3px rgba(183, 28, 28, 0.12);
-        }
+  /* Çiçek Taç Yaprakları */
+  .flower__leafs {
+    position: relative;
+    animation: blooming-flower 2s backwards;
+  }
+  .flower__leafs--1 { animation-delay: 1.1s; }
+  .flower__leafs--2 { animation-delay: 1.4s; }
+  .flower__leafs--3 { animation-delay: 1.7s; }
 
-        .clear-btn {
-            position: absolute;
-            right: 10px;
-            background: #e0e0e0;
-            border: none;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: none;
-            font-weight: bold;
-            color: #333;
-        }
+  .flower__leafs::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: translate(-50%, -100%);
+    width: 8vmin;
+    height: 8vmin;
+    background-color: #6bf0ff;
+    filter: blur(10vmin);
+  }
 
-        .clear-btn.show { display: block; }
+  .flower__leaf {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 8vmin;
+    height: 11vmin;
+    border-radius: 51% 49% 47% 53% / 44% 45% 55% 69%;
+    background-color: #a7ffee;
+    background-image: linear-gradient(to top, #54b8aa, #a7ffee);
+    transform-origin: bottom center;
+    opacity: 0.9;
+    box-shadow: inset 0 0 2vmin rgba(255, 255, 255, 0.5);
+  }
 
-        .btn {
-            border: none;
-            padding: 12px 18px;
-            border-radius: 14px;
-            font-size: 0.98rem;
-            font-weight: 700;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            transition: 0.2s;
-            white-space: nowrap;
-        }
+  .flower__leaf--1 { transform: translate(-10%, 1%) rotateY(40deg) rotateX(-50deg); }
+  .flower__leaf--2 { transform: translate(-50%, -4%) rotateX(40deg); }
+  .flower__leaf--3 { transform: translate(-90%, 0%) rotateY(45deg) rotateX(50deg); }
+  .flower__leaf--4 {
+    width: 8vmin;
+    height: 8vmin;
+    transform-origin: bottom left;
+    border-radius: 4vmin 10vmin 4vmin 4vmin;
+    transform: translate(0%, 18%) rotateX(70deg) rotate(-43deg);
+    background-image: linear-gradient(to top, #39c6d6, #a7ffee);
+    z-index: 1;
+    opacity: 0.8;
+  }
 
-        .btn:active { transform: scale(0.97); }
-        .btn-voice { background: var(--primary-light); color: var(--primary); border: 1px solid #ffcdd2; }
-        .btn-danger { background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; }
+  .flower__white-circle {
+    position: absolute;
+    left: -3.5vmin;
+    top: -3vmin;
+    width: 9vmin;
+    height: 4vmin;
+    border-radius: 50%;
+    background-color: #fff;
+    box-shadow: 0 0 3vmin #a7ffee;
+  }
 
-        .search-hint {
-            font-size: 0.86rem;
-            color: var(--muted);
-            margin-top: 8px;
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
+  .flower__white-circle::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 45%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+    height: 60%;
+    border-radius: inherit;
+    background-image: linear-gradient(90deg, rgb(255, 235, 18), rgb(255, 206, 0));
+  }
 
-        /* 2. MALZEME DOLABI */
-        .pantry-panel {
-            background: var(--card);
-            border-radius: 18px;
-            margin-bottom: 14px;
-            border: 2px solid var(--border);
-            overflow: hidden;
-        }
+  /* Gövde ve Gövde Yaprakları */
+  .flower__line {
+    height: 55vmin;
+    width: 1.5vmin;
+    background-image: 
+      linear-gradient(to left, rgba(0, 0, 0, 0.2), transparent, rgba(255, 255, 255, 0.2)), 
+      linear-gradient(to top, transparent 10%, #14757a, #39c6d6);
+    box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.5);
+    animation: grow-flower-tree 4s backwards;
+  }
 
-        .pantry-header {
-            padding: 14px 18px;
-            background: #fff8f6;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            user-select: none;
-            border-bottom: 1px solid var(--border);
-        }
+  .flower__line__leaf {
+    --w: 7vmin;
+    --h: calc(var(--w) + 2vmin);
+    position: absolute;
+    top: 20%;
+    left: 90%;
+    width: var(--w);
+    height: var(--h);
+    border-top-right-radius: var(--h);
+    border-bottom-left-radius: var(--h);
+    background-image: linear-gradient(to top, rgba(20, 117, 122, 0.4), #39c6d6);
+    box-shadow: 0 0 1vmin rgba(57, 198, 214, 0.3);
+  }
 
-        .pantry-header h3 {
-            font-size: 1.08rem;
-            color: var(--primary-dark);
-        }
+  .flower__line__leaf--1 { transform: rotate(70deg) rotateY(30deg); animation: blooming-leaf-right var(--fl-speed) 1.6s backwards; }
+  .flower__line__leaf--2 { top: 45%; transform: rotate(70deg) rotateY(30deg); animation: blooming-leaf-right var(--fl-speed) 1.4s backwards; }
+  .flower__line__leaf--3, .flower__line__leaf--4 {
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-left-radius: var(--h);
+    border-bottom-right-radius: var(--h);
+    left: -460%;
+    top: 12%;
+    transform: rotate(-70deg) rotateY(30deg);
+  }
+  .flower__line__leaf--3 { animation: blooming-leaf-left var(--fl-speed) 1.2s backwards; }
+  .flower__line__leaf--4 { top: 40%; animation: blooming-leaf-left var(--fl-speed) 1s backwards; }
 
-        .pantry-body { padding: 14px; }
-        .pantry-panel.collapsed .pantry-body { display: none; }
+  /* Çiçekten Çıkan Işık Parçacıkları */
+  .flower__light {
+    position: absolute;
+    bottom: 0vmin;
+    width: 1vmin;
+    height: 1vmin;
+    background-color: rgb(255, 251, 0);
+    border-radius: 50%;
+    filter: blur(0.2vmin);
+    animation: light-ans 4s linear infinite backwards;
+  }
+  .flower__light:nth-child(odd) { background-color: #23f0ff; }
+  .flower__light--1 { left: -2vmin; animation-delay: 1s; }
+  .flower__light--2 { left: 3vmin; animation-delay: 0.5s; }
+  .flower__light--3 { left: -6vmin; animation-delay: 0.3s; }
+  .flower__light--4 { left: 6vmin; animation-delay: 0.9s; }
+  .flower__light--5 { left: -1vmin; animation-delay: 1.5s; }
+  .flower__light--6 { left: -4vmin; animation-delay: 3s; }
+  .flower__light--7 { left: 3vmin; animation-delay: 2s; }
+  .flower__light--8 { left: -6vmin; animation-delay: 3.5s; }
 
-        .reyon-tabs {
-            display: flex;
-            gap: 7px;
-            overflow-x: auto;
-            padding-bottom: 8px;
-            margin-bottom: 12px;
-        }
+  /* Alt Çimenler */
+  .grass {
+    position: absolute;
+    bottom: 10vmin;
+    left: -25vmin;
+    width: 50vmin;
+    height: 30vmin;
+    pointer-events: none;
+  }
 
-        .reyon-tab {
-            background: #f3f0ea;
-            border: 2px solid transparent;
-            padding: 9px 14px;
-            border-radius: 12px;
-            font-size: 0.92rem;
-            font-weight: 700;
-            cursor: pointer;
-            white-space: nowrap;
-            color: #444;
-        }
+  .blade {
+    position: absolute;
+    bottom: 0;
+    width: 1.2vmin;
+    background-image: linear-gradient(to top, transparent 5%, #0c5838, #1dd180);
+    border-radius: 100% 0 0 0;
+    transform-origin: bottom center;
+    animation: grow-grass 2.5s ease-out backwards;
+  }
 
-        .reyon-tab.active {
-            background: var(--primary-light);
-            border-color: var(--primary);
-            color: var(--primary);
-        }
+  /* Animasyon Tanımları */
+  @keyframes light-ans {
+    0% { opacity: 0; transform: translateY(0vmin); }
+    25% { opacity: 1; transform: translateY(-5vmin) translateX(-2vmin); }
+    50% { opacity: 1; transform: translateY(-15vmin) translateX(2vmin); filter: blur(0.2vmin); }
+    75% { transform: translateY(-20vmin) translateX(-2vmin); filter: blur(0.2vmin); }
+    100% { transform: translateY(-30vmin); opacity: 0; filter: blur(1vmin); }
+  }
 
-        .ingredients-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-            gap: 8px;
-        }
+  @keyframes moving-flower-1 {
+    0%, 100% { transform: rotate(2deg); }
+    50% { transform: rotate(-2deg); }
+  }
+  @keyframes moving-flower-2 {
+    0%, 100% { transform: rotate(18deg); }
+    50% { transform: rotate(14deg); }
+  }
+  @keyframes moving-flower-3 {
+    0%, 100% { transform: rotate(-18deg); }
+    50% { transform: rotate(-20deg) rotateY(-10deg); }
+  }
 
-        .ing-btn {
-            background: #f9f8f5;
-            border: 2px solid #e2ddd5;
-            border-radius: 12px;
-            padding: 10px 6px;
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: var(--text);
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            transition: 0.15s;
-            text-align: center;
-        }
+  @keyframes blooming-leaf-right {
+    0% { transform-origin: left; transform: rotate(70deg) rotateY(30deg) scale(0); }
+  }
+  @keyframes blooming-leaf-left {
+    0% { transform-origin: right; transform: rotate(-70deg) rotateY(30deg) scale(0); }
+  }
+  @keyframes grow-flower-tree {
+    0% { height: 0; border-radius: 1vmin; }
+  }
+  @keyframes blooming-flower {
+    0% { transform: scale(0); }
+  }
+  @keyframes grow-grass {
+    0% { transform: scaleY(0); opacity: 0; }
+  }
 
-        .ing-btn .icon { font-size: 1.45rem; }
-
-        .ing-btn.selected {
-            background: var(--success-bg);
-            border-color: var(--success);
-            color: var(--success);
-            transform: translateY(-2px);
-            box-shadow: 0 3px 8px rgba(27, 94, 32, 0.18);
-        }
-
-        /* SEÇİLEN MALZEME SEPETİ */
-        .selected-bar {
-            background: var(--success-bg);
-            border: 2px solid var(--success);
-            border-radius: 14px;
-            padding: 12px 15px;
-            margin-bottom: 14px;
-            display: none;
-        }
-
-        .selected-bar.active { display: block; }
-
-        .selected-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 8px;
-        }
-
-        .selected-chips {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .sel-chip {
-            background: white;
-            color: var(--success);
-            border: 1px solid var(--success);
-            padding: 5px 11px;
-            border-radius: 20px;
-            font-size: 0.88rem;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        /* 3. KATEGORİ SEKMELERİ */
-        .category-bar {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding-bottom: 8px;
-            margin-bottom: 14px;
-        }
-
-        .cat-btn {
-            background: var(--card);
-            border: 2px solid var(--border);
-            padding: 10px 15px;
-            border-radius: 14px;
-            font-size: 0.95rem;
-            font-weight: 800;
-            cursor: pointer;
-            white-space: nowrap;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            color: var(--text);
-        }
-
-        .cat-btn.active {
-            background: var(--primary);
-            border-color: var(--primary);
-            color: white;
-        }
-
-        .cat-btn.yoresel-btn.active {
-            background: var(--yoresel);
-            border-color: var(--yoresel);
-            color: white;
-        }
-
-        /* 4. TARİF KARTLARI */
-        .recipe-card {
-            background: var(--card);
-            border-radius: 18px;
-            margin-bottom: 18px;
-            border: 2px solid var(--border);
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-
-        .recipe-card.exact { border-color: var(--success); }
-        .recipe-card.yoresel-card { border-left: 6px solid var(--yoresel); }
-
-        .recipe-header {
-            padding: 16px 18px;
-            background: #fdfcfb;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .recipe-title {
-            font-size: 1.3rem;
-            font-weight: 800;
-            color: #111;
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .tag-badge {
-            font-size: 0.78rem;
-            padding: 4px 10px;
-            border-radius: 8px;
-            font-weight: 700;
-        }
-
-        .tag-yoresel { background: var(--yoresel-light); color: var(--yoresel); border: 1px solid #ffe0b2; }
-        .tag-turkish { background: var(--primary-light); color: var(--primary); }
-        .tag-world { background: #e3f2fd; color: #1565c0; }
-
-        .recipe-meta {
-            display: flex;
-            gap: 14px;
-            font-size: 0.88rem;
-            color: var(--muted);
-            font-weight: 600;
-            align-items: center;
-        }
-
-        .match-pill {
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.84rem;
-            font-weight: 800;
-        }
-
-        .pill-exact { background: var(--success-bg); color: var(--success); }
-        .pill-partial { background: var(--warning-bg); color: var(--warning); border: 1px solid #ffe082; }
-
-        .recipe-body {
-            padding: 18px;
-            display: grid;
-            grid-template-columns: 1fr 1.35fr;
-            gap: 18px;
-        }
-
-        @media (max-width: 720px) {
-            .recipe-body { grid-template-columns: 1fr; }
-        }
-
-        .ing-box {
-            background: #faf8f5;
-            padding: 14px;
-            border-radius: 12px;
-            border: 1px solid #eee;
-        }
-
-        .box-title {
-            font-size: 0.98rem;
-            font-weight: 800;
-            color: var(--primary-dark);
-            margin-bottom: 8px;
-        }
-
-        .status-chips {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-            margin-bottom: 12px;
-        }
-
-        .s-chip {
-            font-size: 0.8rem;
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-weight: 700;
-        }
-
-        .s-have { background: var(--success-bg); color: var(--success); }
-        .s-miss { background: #ffebee; color: #c62828; }
-
-        .measure-list { list-style: none; }
-        .measure-list li {
-            padding: 5px 0;
-            border-bottom: 1px dashed #e0dcd3;
-            font-size: 0.93rem;
-        }
-        .measure-list li:last-child { border-bottom: none; }
-
-        .steps-list { list-style: none; }
-        .steps-list li {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-            font-size: 0.96rem;
-            line-height: 1.5;
-        }
-
-        .step-num {
-            background: var(--primary);
-            color: white;
-            min-width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            font-weight: bold;
-            margin-top: 2px;
-        }
-
-        .tip-alert {
-            background: #fff8e1;
-            border-left: 4px solid #ffb300;
-            padding: 10px 12px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            color: #4e342e;
-            margin-top: 10px;
-        }
-
-        .empty-box {
-            text-align: center;
-            padding: 40px 20px;
-            background: var(--card);
-            border-radius: 16px;
-            border: 1px solid var(--border);
-            color: var(--muted);
-            font-size: 1.05rem;
-        }
-    </style>
+  .not-loaded * {
+    animation-play-state: paused !important;
+  }
+</style>
 </head>
-<body>
+<body class="not-loaded">
 
-<header>
-    <h1>👩‍🍳 Annemin Güvenli Mutfak Ansiklopedisi</h1>
-    <p>Kesintisiz, Hatasız ve %100 Çalışan Tam Ölçülü Tarif Sistemi</p>
-</header>
+  <div class="night"></div>
+  <div class="stars" id="stars"></div>
 
-<div class="container">
-
-    <!-- 1. ANLIK ARAMA ÇUBUĞU -->
-    <div class="search-panel">
-        <div class="search-row">
-            <div class="search-input-wrap">
-                <span class="search-icon">🔍</span>
-                <input
-                    type="text"
-                    id="searchInput"
-                    class="search-input"
-                    placeholder="Yemek, yöresel lezzet veya tatlı ara... (Örn: Analı Kızlı, Mantı, Trileçe, İskender)"
-                    oninput="handleSearch(this.value)"
-                >
-                <button class="clear-btn" id="clearSearchBtn" onclick="clearSearchBox()">✖</button>
-            </div>
-            <button class="btn btn-voice" onclick="startVoiceSearch()">🎙️ Sesle Ara</button>
-        </div>
-        <div class="search-hint">
-            <span>💡 Arama kutusuna yazdığınız an sonuçlar listelenir.</span>
-            <span>📚 Toplam Tarif Arşivi: <strong id="total-count">0</strong></span>
-        </div>
+  <div class="flowers">
+    <!-- 1. Çiçek (Orta) -->
+    <div class="flower flower--1">
+      <div class="flower__leafs flower__leafs--1">
+        <div class="flower__leaf flower__leaf--1"></div>
+        <div class="flower__leaf flower__leaf--2"></div>
+        <div class="flower__leaf flower__leaf--3"></div>
+        <div class="flower__leaf flower__leaf--4"></div>
+        <div class="flower__white-circle"></div>
+        <div class="flower__light flower__light--1"></div>
+        <div class="flower__light flower__light--2"></div>
+        <div class="flower__light flower__light--3"></div>
+        <div class="flower__light flower__light--4"></div>
+        <div class="flower__light flower__light--5"></div>
+        <div class="flower__light flower__light--6"></div>
+        <div class="flower__light flower__light--7"></div>
+        <div class="flower__light flower__light--8"></div>
+      </div>
+      <div class="flower__line">
+        <div class="flower__line__leaf flower__line__leaf--1"></div>
+        <div class="flower__line__leaf flower__line__leaf--2"></div>
+        <div class="flower__line__leaf flower__line__leaf--3"></div>
+        <div class="flower__line__leaf flower__line__leaf--4"></div>
+      </div>
     </div>
 
-    <!-- 2. SEÇİLEN MALZEME SEPETİ -->
-    <div id="selected-bar" class="selected-bar">
-        <div class="selected-top">
-            <strong style="color: var(--success);">🧺 Evdeki Seçili Malzemeler (<span id="sel-count">0</span>):</strong>
-            <button class="btn btn-danger" style="padding:6px 12px; font-size:0.84rem;" onclick="clearAllIngredients()">🔄 Temizle</button>
-        </div>
-        <div id="selected-chips" class="selected-chips"></div>
+    <!-- 2. Çiçek (Sağ) -->
+    <div class="flower flower--2">
+      <div class="flower__leafs flower__leafs--2">
+        <div class="flower__leaf flower__leaf--1"></div>
+        <div class="flower__leaf flower__leaf--2"></div>
+        <div class="flower__leaf flower__leaf--3"></div>
+        <div class="flower__leaf flower__leaf--4"></div>
+        <div class="flower__white-circle"></div>
+        <div class="flower__light flower__light--1"></div>
+        <div class="flower__light flower__light--2"></div>
+        <div class="flower__light flower__light--3"></div>
+        <div class="flower__light flower__light--4"></div>
+      </div>
+      <div class="flower__line">
+        <div class="flower__line__leaf flower__line__leaf--1"></div>
+        <div class="flower__line__leaf flower__line__leaf--2"></div>
+        <div class="flower__line__leaf flower__line__leaf--3"></div>
+        <div class="flower__line__leaf flower__line__leaf--4"></div>
+      </div>
     </div>
 
-    <!-- 3. AÇILIR/KAPANIR MALZEME DOLABI -->
-    <div id="pantry-panel" class="pantry-panel">
-        <div class="pantry-header" onclick="togglePantry()">
-            <h3>🧺 Evdeki Malzemeleri Seçerek Tarif Bul (Dokun Seç)</h3>
-            <span id="pantry-toggle-text" style="font-size:0.88rem; font-weight:700; color:var(--primary);">▲ Dolabı Küçült</span>
-        </div>
-        <div class="pantry-body">
-            <div class="reyon-tabs" id="reyon-tabs"></div>
-            <div class="ingredients-grid" id="ingredients-grid"></div>
-        </div>
+    <!-- 3. Çiçek (Sol) -->
+    <div class="flower flower--3">
+      <div class="flower__leafs flower__leafs--3">
+        <div class="flower__leaf flower__leaf--1"></div>
+        <div class="flower__leaf flower__leaf--2"></div>
+        <div class="flower__leaf flower__leaf--3"></div>
+        <div class="flower__leaf flower__leaf--4"></div>
+        <div class="flower__white-circle"></div>
+        <div class="flower__light flower__light--1"></div>
+        <div class="flower__light flower__light--2"></div>
+        <div class="flower__light flower__light--3"></div>
+        <div class="flower__light flower__light--4"></div>
+      </div>
+      <div class="flower__line">
+        <div class="flower__line__leaf flower__line__leaf--1"></div>
+        <div class="flower__line__leaf flower__line__leaf--2"></div>
+        <div class="flower__line__leaf flower__line__leaf--3"></div>
+        <div class="flower__line__leaf flower__line__leaf--4"></div>
+      </div>
     </div>
 
-    <!-- 4. KATEGORİ SEKMELERİ -->
-    <div class="category-bar">
-        <button class="cat-btn active" id="cat-all" onclick="setCategory('all')">🍽️ Tümü</button>
-        <button class="cat-btn yoresel-btn" id="cat-yoresel" onclick="setCategory('yoresel')">🏺 Yöresel Mutfağımız</button>
-        <button class="cat-btn" id="cat-corba" onclick="setCategory('corba')">🥣 Çorbalar</button>
-        <button class="cat-btn" id="cat-anayemek" onclick="setCategory('anayemek')">🍲 Ana Yemek & Kebap</button>
-        <button class="cat-btn" id="cat-zeytinyagli" onclick="setCategory('zeytinyagli')">🫒 Zeytinyağlı & Dolma</button>
-        <button class="cat-btn" id="cat-hamur" onclick="setCategory('hamur')">🥟 Börek, Mantı & Pilav</button>
-        <button class="cat-btn" id="cat-tatli" onclick="setCategory('tatli')">🍮 Tatlı & Kurabiye</button>
-        <button class="cat-btn" id="cat-world" onclick="setCategory('world')">🌍 Dünya Mutfağı</button>
-    </div>
+    <!-- Çimenler -->
+    <div class="grass" id="grass"></div>
+  </div>
 
-    <!-- 5. TARİF LİSTESİ -->
-    <div id="recipes-container"></div>
+  <script>
+    window.onload = () => {
+      // Animasyonu başlat
+      setTimeout(() => {
+        document.body.classList.remove("not-loaded");
+      }, 300);
 
-</div>
+      // Arka plan yıldızlarını oluştur
+      const starsContainer = document.getElementById('stars');
+      for (let i = 0; i < 60; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        const size = Math.random() * 2.5 + 1;
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        star.style.left = `${Math.random() * 100}%`;
+        star.style.top = `${Math.random() * 80}%`;
+        star.style.animationDelay = `${Math.random() * 3}s`;
+        starsContainer.appendChild(star);
+      }
 
-<script>
-    function norm(str) {
-        if (!str) return "";
-        return str.toLocaleLowerCase('tr-TR')
-            .replace(/ı/g, 'i').replace(/ğ/g, 'g').replace(/ü/g, 'u')
-            .replace(/ş/g, 's').replace(/ö/g, 'o').replace(/ç/g, 'c').trim();
-    }
+      // Çimen yapraklarını oluştur
+      const grassContainer = document.getElementById('grass');
+      const grassData = [
+        { left: 10, height: 22, rot: -35, delay: 0.8 },
+        { left: 14, height: 28, rot: -25, delay: 1.0 },
+        { left: 18, height: 18, rot: -15, delay: 1.2 },
+        { left: 22, height: 25, rot: -10, delay: 0.9 },
+        { left: 27, height: 24, rot: 12, delay: 1.1 },
+        { left: 31, height: 19, rot: 20, delay: 1.3 },
+        { left: 35, height: 27, rot: 28, delay: 0.9 },
+        { left: 39, height: 21, rot: 38, delay: 1.4 }
+      ];
 
-    // MALZEME REYONLARI
-    const ingredientCategories = [
-        {
-            id: "sebze", name: "🍅 Sebzeler",
-            items: [
-                { id: "patates", name: "Patates", icon: "🥔" },
-                { id: "sogan", name: "Kuru Soğan", icon: "🧅" },
-                { id: "domates", name: "Domates", icon: "🍅" },
-                { id: "biber", name: "Yeşil Biber", icon: "🌶️" },
-                { id: "kapya", name: "Kapya Biber", icon: "🫑" },
-                { id: "patlican", name: "Patlıcan", icon: "🍆" },
-                { id: "kabak", name: "Kabak", icon: "🥒" },
-                { id: "sarimsak", name: "Sarımsak", icon: "🧄" },
-                { id: "havuc", name: "Havuç", icon: "🥕" },
-                { id: "ispanak", name: "Ispanak", icon: "🥬" },
-                { id: "tazefasulye", name: "Taze Fasulye", icon: "🫛" },
-                { id: "mantar", name: "Mantar", icon: "🍄" },
-                { id: "bezelye", name: "Bezelye", icon: "🟢" },
-                { id: "pirasa", name: "Pırasa", icon: "🎋" },
-                { id: "karnabahar", name: "Karnabahar", icon: "🥦" },
-                { id: "enginar", name: "Enginar", icon: "💚" },
-                { id: "limon", name: "Limon", icon: "🍋" }
-            ]
-        },
-        {
-            id: "et", name: "🥩 Et, Tavuk & Balık",
-            items: [
-                { id: "kiyma", name: "Kıyma", icon: "🥩" },
-                { id: "kusbasi", name: "Kuşbaşı Et", icon: "🍖" },
-                { id: "kuzueti", name: "Kuzu Eti / İncik", icon: "🍗" },
-                { id: "tavukgogsu", name: "Tavuk Göğsü", icon: "🍗" },
-                { id: "tavukbut", name: "Tavuk Baget / But", icon: "🍗" },
-                { id: "balik", name: "Hamsi / Balık", icon: "🐟" },
-                { id: "sucuk", name: "Sucuk / Pastırma", icon: "🌭" }
-            ]
-        },
-        {
-            id: "bakliyat", name: "🌾 Bakliyat & Bulgur",
-            items: [
-                { id: "pirinc", name: "Pirinç", icon: "🍚" },
-                { id: "bulgur", name: "Pilavlık Bulgur", icon: "🌾" },
-                { id: "koftelikbulgur", name: "İnce Köftelik Bulgur", icon: "🌾" },
-                { id: "yarma", name: "Yarma / Buğday", icon: "🌾" },
-                { id: "kirmizimercimek", name: "Kırmızı Mercimek", icon: "🥣" },
-                { id: "yesilmercimek", name: "Yeşil Mercimek", icon: "🫘" },
-                { id: "nohut", name: "Nohut", icon: "🫘" },
-                { id: "kurufasulye", name: "Kuru Fasulye", icon: "🫘" },
-                { id: "barbunya", name: "Barbunya", icon: "🫘" },
-                { id: "sehriye", name: "Tel / Arpa Şehriye", icon: "🍜" },
-                { id: "irmik", name: "İrmik", icon: "🌾" },
-                { id: "tarhana", name: "Tarhana", icon: "🥣" }
-            ]
-        },
-        {
-            id: "yesillik", name: "🌿 Yaprak & Yeşillik",
-            items: [
-                { id: "asmayapragi", name: "Asma Yaprağı", icon: "🍃" },
-                { id: "kirazyapragi", name: "Kiraz / Pazı Yaprağı", icon: "🥬" },
-                { id: "maydanoz", name: "Maydanoz", icon: "🌿" },
-                { id: "dereotu", name: "Dereotu", icon: "🌱" },
-                { id: "tazesogan", name: "Taze Soğan", icon: "🧅" }
-            ]
-        },
-        {
-            id: "hamur", name: "🥟 Un, Yufka & Makarna",
-            items: [
-                { id: "un", name: "Un", icon: "🥡" },
-                { id: "misirunu", name: "Mısır Unu", icon: "🌽" },
-                { id: "yufka", name: "Böreklik Yufka", icon: "🥟" },
-                { id: "baklavayufka", name: "Baklavalık Yufka", icon: "🥮" },
-                { id: "lavas", name: "Lavaş / Pide", icon: "🫓" },
-                { id: "makarna", name: "Makarna", icon: "🍝" },
-                { id: "lazanya", name: "Lazanya", icon: "🍝" },
-                { id: "kadayif", name: "Tel Kadayıf / Güllaç", icon: "🍮" },
-                { id: "nisasta", name: "Nişasta", icon: "🥡" },
-                { id: "biskuvi", name: "Bisküvi", icon: "🍪" }
-            ]
-        },
-        {
-            id: "sut", name: "🧀 Süt, Peynir & Tatlı",
-            items: [
-                { id: "yumurta", name: "Yumurta", icon: "🥚" },
-                { id: "yogurt", name: "Yoğurt", icon: "🥣" },
-                { id: "sut", name: "Süt", icon: "🥛" },
-                { id: "tereyagi", name: "Tereyağı", icon: "🧈" },
-                { id: "beyazpeynir", name: "Beyaz Peynir / Lor", icon: "🧀" },
-                { id: "kasar", name: "Kaşar Peyniri", icon: "🧀" },
-                { id: "krema", name: "Sıvı Krema", icon: "🥛" },
-                { id: "labne", name: "Labne", icon: "🧁" },
-                { id: "seker", name: "Toz Şeker", icon: "🧂" },
-                { id: "ceviz", name: "Ceviz / Fıstık", icon: "🌰" },
-                { id: "kayisi", name: "Kuru Kayısı", icon: "🍑" },
-                { id: "kakao", name: "Kakao / Çikolata", icon: "🍫" },
-                { id: "salca", name: "Salça", icon: "🥫" },
-                { id: "zeytinyagi", name: "Zeytinyağı", icon: "🫒" }
-            ]
-        }
-    ];
-
-    const allIngredientsMap = {};
-    ingredientCategories.forEach(c => {
-        c.items.forEach(item => {
-            allIngredientsMap[item.id] = { ...item, label: `${item.icon} ${item.name}` };
-        });
-    });
-
-    function R(name, category, cuisineLabel, time, servings, ingredients, fullIngredients, steps, tip) {
-        return { name, category, cuisineLabel, time, servings, ingredients, fullIngredients, steps, tip };
-    }
-
-    // DEVASA %100 HATASIZ HAZIR TARİF ARŞİVİ
-    const recipes = [
-        R("Malatya Analı Kızlı Köfte", "yoresel", "🏺 Malatya Yöresel", "75 Dk", "6-8 Kişilik",
-          ["koftelikbulgur", "kiyma", "nohut", "sogan", "salca", "tereyagi"],
-          ["Dışı: 500 gr yağsız çiğ köftelik kıyma, 500 gr ince bulgur (düğürcük), 1 yumurta, 1 tatlı kaşığı salça, tuz", "İçi: 350 gr orta yağlı kıyma, 4 kuru soğan, 100 gr tereyağı, reyhan, karabiber", "Suyu: 1 bardak haşlanmış nohut, kemikli et suyu, salça, tereyağı, erik ekşisi"],
-          ["İç harç için kıyma ve soğanı tereyağında kavurup soğutun.", "Dış hamur için ince bulgur, yağsız kıyma ve salçayı soğuk suyla sakız gibi yoğurun.", "Hamurdan ceviz büyüklüğünde parçalar açıp iç harcı doldurarak Anaları, nohut büyüklüğünde yuvarlayarak Kızları yapın.", "Salçalı nohutlu kaynar suda önce Anaları 10 dk, sonra Kızları ekleyip 10 dk pişirin."],
-          "Dış hamurundaki yağsız et köftelerin suda dağılmamasını sağlar."),
-
-        R("Malatya Kiraz Yaprağı Sarması (Ekşili Köfte)", "yoresel", "🏺 Malatya Yöresel", "60 Dk", "6 Kişilik",
-          ["koftelikbulgur", "yarma", "kirazyapragi", "yogurt", "un", "sogan", "tereyagi"],
-          ["500 gr kiraz veya pazı yaprağı, 2 su bardağı ince bulgur ve yarma karışımı", "Terbiyesi: 4 bardak yoğurt, 2 kaşık un, 1 yumurta, erik ekşisi", "Üzeri: 4 büyük soğan (piyazlık), 3 kaşık tereyağı, salça"],
-          ["Bulguru ılık suyla macun gibi yoğurup yapraklara kalem inceliğinde sarın.", "Yoğurt, un ve suyu çırparak kaynatın, sarmaları bu yoğurtlu suda pişirin.", "Tereyağı ve salçayla karamelize edilmiş bol soğanı üzerine dökün."],
-          "Soğanını bol tutmak ve erik ekşisi kullanmak lezzet sırrıdır."),
-
-        R("Malatya Geleli Kebabı", "yoresel", "🏺 Malatya Yöresel", "45 Dk", "4-6 Kişilik",
-          ["patlican", "kusbasi", "domates", "biber", "sogan", "sarimsak", "tereyagi"],
-          ["5 adet patlıcan, 500 gr kuzu kuşbaşı et", "2 kuru soğan, 3 yeşil biber, 3 domates, 3 diş sarımsak, 2 yemek kaşığı tereyağı, tuz, pul biber"],
-          ["Kuşbaşı etleri soğan, biber ve domatesle yumuşayana kadar pişirin.", "Közlenmiş patlıcanları küp doğrayıp fırın tepsisinin tabanına yayın.", "Üzerine pişmiş et sote harcını döküp tereyağı parçaları ekleyin ve 200 derece fırında 15-20 dk özleştirin."],
-          "Patlıcanların köz kokusuyla kuzu etinin suyunun fırında birleşmesi eşsiz bir tat verir."),
-
-        R("Kayseri Yağlaması (Şebit)", "yoresel", "🏺 Kayseri Yöresel", "45 Dk", "6 Kişilik",
-          ["lavas", "kiyma", "sogan", "domates", "biber", "sarimsak", "salca", "yogurt", "tereyagi"],
-          ["12 adet ince lavaş (şebit), 500 gr kıyma, 3 soğan, 3 biber, 3 domates", "2 yemek kaşığı salça, tereyağı, 1.5 bardak sıcak su, sarımsaklı yoğurt"],
-          ["Kıymayı soğan, biber, salça, domates ve sıcak suyla sulu bir sos kıvamında pişirin.", "Lavaşların üzerine kat kat sıcak kıymalı harçtan yayın.", "Dörde bölüp sarımsaklı yoğurtla servis edin."],
-          "Kıymalı harç mutlaka hafif sulu ve yağlı olmalıdır."),
-
-        R("Lokanta Usulü Mercimek Çorbası", "corba", "🥣 Çorba", "30 Dk", "6 Kişilik",
-          ["kirmizimercimek", "sogan", "havuc", "patates", "un", "tereyagi"],
-          ["1.5 bardak kırmızı mercimek, 1 soğan, 1 patates, 1 havuç, 1 kaşık un, tereyağı"],
-          ["Sebzeleri ve unu tereyağında 3 dk kavurup mercimek ve 6 bardak sıcak su ekleyin.", "Yumuşayınca blenderdan geçirip tereyağlı sos yakın."],
-          "Mercimeği berraklaşana kadar yıkayın."),
-
-        R("Geleneksel Ezogelin Çorbası", "corba", "🥣 Çorba", "35 Dk", "6 Kişilik",
-          ["kirmizimercimek", "pirinc", "bulgur", "sogan", "sarimsak", "salca", "tereyagi"],
-          ["1 bardak mercimek, 1 kaşık pirinç, 1 kaşık bulgur, soğan, sarımsak, salça, nane"],
-          ["Bakliyatları haşlayın, ayrı tavada kavrulmuş salçalı naneli soğan sosunu ekleyip 10 dk kaynatın."],
-          "Blenderdan geçirmeden taneli bırakın."),
-
-        R("Yayla Çorbası", "corba", "🥣 Çorba", "25 Dk", "6 Kişilik",
-          ["pirinc", "yogurt", "yumurta", "un", "tereyagi"],
-          ["1 çay bardağı pirinç, 1.5 bardak yoğurt, 1 yumurta sarısı, 1 kaşık un, tereyağı, nane"],
-          ["Haşlanan pirince yoğurtlu terbiyeyi ekleyip kaynatın, üzerine naneli tereyağı yakın."],
-          "Tuzu kaynadıktan sonra atın."),
-
-        R("Karnıyarık", "anayemek", "🍲 Ana Yemek", "45 Dk", "4-6 Kişilik",
-          ["patlican", "kiyma", "sogan", "domates", "biber", "sarimsak", "salca"],
-          ["6 patlıcan, 300 gr kıyma, 2 soğan, biber, domates, sarımsak, salça"],
-          ["Kızarmış patlıcanların ortasını açıp kavrulmuş kıymalı harcı doldurun, 190 derecede fırınlayın."],
-          "Patlıcanları tuzlu suda bekletip kurulayın."),
-
-        R("Hünkar Beğendi", "anayemek", "🍲 Osmanlı Mutfağı", "55 Dk", "4 Kişilik",
-          ["kusbasi", "patlican", "sogan", "domates", "biber", "salca", "sut", "un", "kasar", "tereyagi"],
-          ["500 gr kuşbaşı et, 4 köz patlıcan, un, tereyağı, süt, kaşar"],
-          ["Et sote hazırlayın; köz patlıcanlı kaşarlı beşamel beğendi üzerine sıcak etleri koyun."],
-          "Beğendiyi kısık ateşte sürekli karıştırın."),
-
-        R("İzmir Köfte", "anayemek", "🍲 Fırın Yemeği", "50 Dk", "4-6 Kişilik",
-          ["kiyma", "patates", "sogan", "yumurta", "domates", "biber", "salca"],
-          ["500 gr kıyma, 4 elma dilim patates, soğan, yumurta, biber, domates, salça"],
-          ["Köfte ve patatesleri hafif kızartıp tepsiye dizin, salçalı sosla fırınlayın."],
-          "Köfteyi 20 dk dinlendirin."),
-
-        R("Zeytinyağlı Yaprak Sarma", "zeytinyagli", "🫒 Zeytinyağlı", "60 Dk", "6-8 Kişilik",
-          ["asmayapragi", "pirinc", "sogan", "zeytinyagi", "limon", "maydanoz", "salca"],
-          ["500 gr asma yaprağı, 2 bardak pirinç, 3 soğan, 1 bardak zeytinyağı, limon, nane, yenibahar"],
-          ["Bol soğanlı baharatlı iç harcı hazırlayıp yapraklara sarın, kısık ateşte limonla pişirin."],
-          "Kapağını soğuyana kadar açmayın."),
-
-        R("Zeytinyağlı Taze Fasulye", "zeytinyagli", "🫒 Zeytinyağlı", "45 Dk", "4-6 Kişilik",
-          ["tazefasulye", "domates", "sogan", "sarimsak", "zeytinyagi"],
-          ["750 gr taze fasulye, 3 domates, 2 soğan, 3 diş sarımsak, zeytinyağı, 2 küp şeker"],
-          ["Malzemeleri çiğden dizip en kısık ateşte kendi suyuyla pişirin."],
-          "Soğuk servis edin."),
-
-        R("Sodalı Su Böreği Tadında Peynirli Börek", "hamur", "🥟 Börek", "45 Dk", "8 Kişilik",
-          ["yufka", "beyazpeynir", "maydanoz", "sut", "yumurta", "tereyagi"],
-          ["5 yufka, 300 gr beyaz peynir, 1 bardak süt, sıvı yağ, 2 yumurta, 1 şişe maden suyu"],
-          ["Soslu yufkaların ortasına peynir döşeyip dilimleyin, maden suyu döküp 180 derecede pişirin."],
-          "Fırına vermeden 15 dk sosu çekmesini bekleyin."),
-
-        R("Kayseri Ev Mantısı", "hamur", "🥟 Hamur İşi", "45 Dk", "4 Kişilik",
-          ["un", "yumurta", "kiyma", "sogan", "yogurt", "sarimsak", "salca", "tereyagi"],
-          ["3 bardak un, 1 yumurta, 250 gr kıyma, soğan, sarımsaklı yoğurt, salçalı tereyağı"],
-          ["Hamuru kare kesip kıymalı harçla kapatın, haşlayıp yoğurt ve sosla servis edin."],
-          "Haşlama suyuna 1 kaşık yağ ekleyin."),
-
-        R("Tane Tane Tereyağlı Şehriyeli Pirinç Pilavı", "hamur", "🥟 Pilav", "25 Dk", "4-6 Kişilik",
-          ["pirinc", "sehriye", "tereyagi", "limon"],
-          ["2 bardak baldo pirinç, yarım çay bardağı şehriye, 2 kaşık tereyağı, 3 bardak sıcak su, 3 damla limon"],
-          ["Şehriye ve yıkanmış pirinci tereyağında 4 dk kavurup sıcak suyla kısık ateşte pişirin."],
-          "Birkaç damla limon pilavı bembeyaz yapar."),
-
-        R("Fırın Sütlaç (Tam Kıvamında)", "tatli", "🍮 Sütlü Tatlı", "40 Dk", "6 Kişilik",
-          ["sut", "pirinc", "seker", "nisasta", "yumurta"],
-          ["1 litre süt, 1 çay bardağı pirinç, 1 bardak şeker, 1 yumurta sarısı, 2 kaşık nişasta"],
-          ["Haşlanan pirince süt ve şeker ekleyin, nişasta ve yumurtayla bağlayıp güveçte fırınlayın."],
-          "Fırın tepsisine soğuk su koyun."),
-
-        R("Karamelli Trileçe", "tatli", "🍮 Sütlü Tatlı", "45 Dk", "8 Kişilik",
-          ["yumurta", "seker", "un", "sut", "krema", "tereyagi"],
-          ["Kek: 5 yumurta, 1 bardak şeker, 1.5 bardak un", "Sos: 3.5 bardak süt, 1 paket krema", "Karamel: 1 çay bardağı şeker, tereyağı, krema"],
-          ["Sünger keki pişirip soğuk kremalı süt şerbetini dökün, üzerine karamel sos yayın."],
-          "Kekinde yağ kullanılmaz."),
-
-        R("Ev Yapımı Cevizli Baklava", "tatli", "🍮 Şerbetli Tatlı", "60 Dk", "8 Kişilik",
-          ["baklavayufka", "tereyagi", "ceviz", "seker", "limon"],
-          ["1 paket baklavalık yufka, 250 gr tereyağı, 2 bardak ceviz, şerbet (şeker, su, limon)"],
-          ["Yufkaları yağlayarak dizin, orta kata ceviz serpip dilimleyin, 170 derecede kızartıp ılık şerbet dökün."],
-          "Tereyağının köpüğünü mutlaka alın."),
-
-        R("Bolonez Soslu İtalyan Lazanya", "world", "🌍 İtalyan Mutfağı", "50 Dk", "6 Kişilik",
-          ["lazanya", "kiyma", "sogan", "havuc", "domates", "salca", "sut", "un", "tereyagi", "kasar"],
-          ["1 paket lazanya, 400 gr kıyma, domates sos, beşamel sos (tereyağı, un, süt), kaşar"],
-          ["Kat kat beşamel, lazanya, kıymalı sos ve kaşar dizip 190 derecede 30 dk pişirin."],
-          "Sos sulu olursa yaprakları haşlamaya gerek kalmaz."),
-
-        R("Kremalı Mantarlı Fettuccine Alfredo", "world", "🌍 İtalyan Mutfağı", "25 Dk", "4 Kişilik",
-          ["makarna", "tavukgogsu", "mantar", "krema", "sarimsak", "kasar", "tereyagi"],
-          ["1 paket makarna, 400 gr tavuk, 300 gr mantar, 1 paket krema, sarımsak, kaşar/parmesan"],
-          ["Tavuk ve mantarları soteleyip krema ve peynirle sos yapın, makarnayla birleştirin."],
-          "Haşlama suyundan sosa ekleyin.")
-    ];
-
-    let selectedIngredients = new Set();
-    let activeReyon = "sebze";
-    let activeCategory = "all";
-    let searchQuery = "";
-
-    function init() {
-        document.getElementById("total-count").textContent = recipes.length;
-        renderReyonTabs();
-        renderIngredientsGrid();
-        renderSelectedBar();
-        renderRecipes();
-    }
-
-    function togglePantry() {
-        const panel = document.getElementById("pantry-panel");
-        const txt = document.getElementById("pantry-toggle-text");
-        panel.classList.toggle("collapsed");
-        txt.textContent = panel.classList.contains("collapsed") ? "▼ Dolabı Aç (Malzeme Seç)" : "▲ Dolabı Küçült";
-    }
-
-    function renderReyonTabs() {
-        const container = document.getElementById("reyon-tabs");
-        container.innerHTML = "";
-        ingredientCategories.forEach(cat => {
-            const count = cat.items.filter(i => selectedIngredients.has(i.id)).length;
-            const btn = document.createElement("button");
-            btn.className = "reyon-tab" + (activeReyon === cat.id ? " active" : "");
-            btn.innerHTML = `${cat.name} ${count > 0 ? `<span style="background:var(--success);color:white;padding:1px 7px;border-radius:10px;font-size:0.76rem;">${count}</span>` : ""}`;
-            btn.onclick = () => {
-                activeReyon = cat.id;
-                renderReyonTabs();
-                renderIngredientsGrid();
-            };
-            container.appendChild(btn);
-        });
-    }
-
-    function renderIngredientsGrid() {
-        const container = document.getElementById("ingredients-grid");
-        container.innerHTML = "";
-        const cat = ingredientCategories.find(c => c.id === activeReyon);
-        if (!cat) return;
-
-        cat.items.forEach(item => {
-            const btn = document.createElement("button");
-            btn.className = "ing-btn" + (selectedIngredients.has(item.id) ? " selected" : "");
-            btn.innerHTML = `<span class="icon">${item.icon}</span><span>${item.name}</span>`;
-            btn.onclick = () => toggleIngredient(item.id);
-            container.appendChild(btn);
-        });
-    }
-
-    function toggleIngredient(id) {
-        if (selectedIngredients.has(id)) selectedIngredients.delete(id);
-        else selectedIngredients.add(id);
-        document.getElementById("sel-count").textContent = selectedIngredients.size;
-        renderReyonTabs();
-        renderIngredientsGrid();
-        renderSelectedBar();
-        renderRecipes();
-    }
-
-    function clearAllIngredients() {
-        selectedIngredients.clear();
-        document.getElementById("sel-count").textContent = 0;
-        renderReyonTabs();
-        renderIngredientsGrid();
-        renderSelectedBar();
-        renderRecipes();
-    }
-
-    function renderSelectedBar() {
-        const bar = document.getElementById("selected-bar");
-        const chips = document.getElementById("selected-chips");
-        chips.innerHTML = "";
-
-        if (selectedIngredients.size === 0) {
-            bar.classList.remove("active");
-            return;
-        }
-
-        bar.classList.add("active");
-        selectedIngredients.forEach(id => {
-            const info = allIngredientsMap[id];
-            const chip = document.createElement("span");
-            chip.className = "sel-chip";
-            chip.innerHTML = `${info ? info.label : id} ✖`;
-            chip.onclick = () => toggleIngredient(id);
-            chips.appendChild(chip);
-        });
-    }
-
-    function setCategory(cat) {
-        activeCategory = cat;
-        document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
-        document.getElementById("cat-" + cat).classList.add("active");
-        renderRecipes();
-    }
-
-    function handleSearch(val) {
-        searchQuery = val;
-        const clearBtn = document.getElementById("clearSearchBtn");
-        if (val.trim().length > 0) clearBtn.classList.add("show");
-        else clearBtn.classList.remove("show");
-
-        if (val.trim().length > 0 && activeCategory !== "all") {
-            activeCategory = "all";
-            document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
-            document.getElementById("cat-all").classList.add("active");
-        }
-
-        renderRecipes();
-    }
-
-    function clearSearchBox() {
-        document.getElementById("searchInput").value = "";
-        handleSearch("");
-    }
-
-    function renderRecipes() {
-        const container = document.getElementById("recipes-container");
-        container.innerHTML = "";
-        const q = norm(searchQuery);
-
-        let list = recipes.filter(r => {
-            if (activeCategory === "all") return true;
-            return r.category === activeCategory;
-        });
-
-        if (q.length > 0) {
-            list = list.filter(r => {
-                const inTitle = norm(r.name).includes(q);
-                const inLabel = norm(r.cuisineLabel).includes(q);
-                const inIngs = (r.fullIngredients || []).some(i => norm(i).includes(q));
-                return inTitle || inLabel || inIngs;
-            });
-        }
-
-        const scored = list.map(r => {
-            const ings = r.ingredients || [];
-            const matched = ings.filter(i => selectedIngredients.has(i));
-            const missing = ings.filter(i => !selectedIngredients.has(i));
-            const percent = ings.length > 0 ? Math.round((matched.length / ings.length) * 100) : 0;
-            return { ...r, matchedCount: matched.length, missingCount: missing.length, percent };
-        });
-
-        let final = scored;
-        if (selectedIngredients.size > 0 && q.length === 0) {
-            final = scored
-                .filter(r => r.matchedCount > 0)
-                .sort((a, b) => {
-                    if (b.percent !== a.percent) return b.percent - a.percent;
-                    return a.missingCount - b.missingCount;
-                });
-        }
-
-        if (final.length === 0) {
-            container.innerHTML = `<div class="empty-box">Aradığınız kriterde tarif bulunamadı. Lütfen başka bir yemek adı yazmayı veya seçimi temizlemeyi deneyin.</div>`;
-            return;
-        }
-
-        final.forEach(r => {
-            const isExact = r.missingCount === 0 && selectedIngredients.size > 0;
-            const isYoresel = r.category === "yoresel";
-            const isWorld = r.category === "world";
-
-            const card = document.createElement("div");
-            card.className = `recipe-card ${isExact ? "exact" : ""} ${isYoresel ? "yoresel-card" : ""}`;
-
-            let tagClass = "tag-turkish";
-            if (isYoresel) tagClass = "tag-yoresel";
-            else if (isWorld) tagClass = "tag-world";
-
-            let matchBadge = `<span class="match-pill pill-exact">📖 Tam Ölçülü</span>`;
-            if (selectedIngredients.size > 0) {
-                matchBadge = isExact
-                    ? `<span class="match-pill pill-exact">✅ %100 Evde Var!</span>`
-                    : `<span class="match-pill pill-partial">🌟 %${r.percent} Uygun (${r.missingCount} Eksik)</span>`;
-            }
-
-            const statusChips = (r.ingredients || []).map(id => {
-                const info = allIngredientsMap[id];
-                const label = info ? info.label : id;
-                if (selectedIngredients.size === 0) return `<span class="s-chip s-have">${label}</span>`;
-                return selectedIngredients.has(id)
-                    ? `<span class="s-chip s-have">✓ ${label}</span>`
-                    : `<span class="s-chip s-miss">✗ ${label}</span>`;
-            }).join("");
-
-            const fullList = (r.fullIngredients || []).map(item => `<li>🔸 ${item}</li>`).join("");
-            const stepList = (r.steps || []).map((st, i) => `<li><span class="step-num">${i + 1}</span><span>${st}</span></li>`).join("");
-            const tipBox = r.tip ? `<div class="tip-alert"><strong>💡 Püf Noktası:</strong> ${r.tip}</div>` : "";
-
-            card.innerHTML = `
-                <div class="recipe-header">
-                    <div>
-                        <div class="recipe-title">
-                            <span>${r.name}</span>
-                            <span class="tag-badge ${tagClass}">${r.cuisineLabel}</span>
-                        </div>
-                        <div class="recipe-meta">
-                            <span>⏱️ Pişirme: ${r.time}</span>
-                            <span>🍽️ Porsiyon: ${r.servings}</span>
-                        </div>
-                    </div>
-                    ${matchBadge}
-                </div>
-                <div class="recipe-body">
-                    <div class="ing-box">
-                        <div class="box-title">🔍 Ana Malzemeler</div>
-                        <div class="status-chips">${statusChips}</div>
-                        <div class="box-title" style="margin-top:10px;">📋 Gerçek Ölçülü Malzeme Listesi</div>
-                        <ul class="measure-list">${fullList}</ul>
-                    </div>
-                    <div>
-                        <div class="box-title">👩‍🍳 Adım Adım Yapılışı</div>
-                        <ul class="steps-list">${stepList}</ul>
-                        ${tipBox}
-                    </div>
-                </div>
-            `;
-            container.appendChild(card);
-        });
-    }
-
-    function startVoiceSearch() {
-        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SR) {
-            alert("Tarayıcınız sesli aramayı desteklemiyor.");
-            return;
-        }
-        const rec = new SR();
-        rec.lang = "tr-TR";
-        rec.onresult = (e) => {
-            const text = e.results[0][0].transcript.replace(/[.,!?]/g, "");
-            document.getElementById("searchInput").value = text;
-            handleSearch(text);
-        };
-        rec.start();
-    }
-
-    init();
-</script>
-
+      grassData.forEach(data => {
+        const blade = document.createElement('div');
+        blade.className = 'blade';
+        blade.style.left = `${data.left}vmin`;
+        blade.style.height = `${data.height}vmin`;
+        blade.style.transform = `rotate(${data.rot}deg)`;
+        blade.style.animationDelay = `${data.delay}s`;
+        grassContainer.appendChild(blade);
+      });
+    };
+  </script>
 </body>
 </html>
